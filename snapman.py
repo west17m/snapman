@@ -70,6 +70,23 @@ def get_snaps(dataset=''):
 def get_auto_snaps(label,dataset=''):
     return snaps[snaps.str.endswith(label)]
 
+def delete_snaps(snaps):
+
+    block = 27
+    idx = 0
+    while idx < len(list):
+        end = idx + block - 1
+        if end > len(list):
+            end = len(list)
+
+        _temp = ''
+        for i in list[idx:end]:
+            _temp = _temp + str(i) + ','
+
+        cmd = 'zfs destroy -r ' + str(_temp[:-1])
+        print(cmd)
+        idx = end + 1
+
 
 start_time = time.time()
 
@@ -77,9 +94,24 @@ dataset = 'tank'
 snaps = get_snaps(dataset)
 print("--- %s seconds ---" % (time.time() - start_time))
 
+#snaps = str(len(get_auto_snaps(label,dataset)))
+
 for label in ['frequent','hourly','daily','weekly','monthly']:
     print(label + ' ' + str(len(get_auto_snaps(label,dataset))))
 
-print(dataset + ' snapshots ' + str(len(snaps)))
+label='frequent'
+list=get_auto_snaps(label,dataset)
+print('length ' + str(len(list)))
+# last 5 entries
+print(list[:len(list)-5])
+
+delete_snaps(list[:len(list)-5])
+
+#list[:len(list)-5]
+
+#print('---------------')
+#print(list[-5:])
+
+#print(dataset + ' snapshots ' + str(len(snaps)))
 
 print("--- %s seconds ---" % (time.time() - start_time))
